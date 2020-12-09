@@ -5,11 +5,11 @@ const cors = require('cors')
 const helmet = require('helmet')
 const MOVIES = require('./movies-data.json')
 
-// console.log('MOVIES.movie[1].genre')
 
 const app = express()
 
-app.use(morgan('dev'))
+const morganSettng = process.env.NODE_ENV === 'production' ? 'tiny' : 'common'
+app.use(morgan(morganSettng))
 app.use(cors())
 app.use(helmet())
 
@@ -45,8 +45,17 @@ app.get('/movie', function handleGetMovie(req, res) {
 
   res.json(response)
 })
+//// 4 parameters in middleware, express knows to treat this as error handler
+app.use((error, req, res, next) =>{
+    let response
+    if(process.env.NODE_ENV === 'production'){
+        respone = {error:{message: 'server error'}}
+    }else{response = {error}
+}
+res.status(500).json(response)
+})
 
-const PORT = 8002
+const PORT = process.env.PORT || 8002
 
 app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`)
