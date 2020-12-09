@@ -5,6 +5,8 @@ const cors = require('cors')
 const helmet = require('helmet')
 const MOVIES = require('./movies-data.json')
 
+// console.log('MOVIES.movie[1].genre')
+
 const app = express()
 
 app.use(morgan('dev'))
